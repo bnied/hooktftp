@@ -12,6 +12,7 @@ import (
 type Connection interface {
 	ReadFrom(b []byte) (n int, addr net.Addr, err error)
 	Write(p []byte) (n int, err error)
+	Close() error
 }
 
 type RRQresponse struct {
@@ -61,6 +62,10 @@ func (res *RRQresponse) Write(p []byte) (int, error) {
 	}
 
 	return len(p), nil
+}
+
+func (res *RRQresponse) Close() error {
+	return res.conn.Close()
 }
 
 func (res *RRQresponse) writeBuffer() (int, error) {
